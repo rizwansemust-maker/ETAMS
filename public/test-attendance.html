@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>💉 Attendance Test</title>
+    <style>
+        body { font-family: Arial; margin: 20px; background: #f5f5f5; }
+        #output { 
+            background: white; 
+            padding: 15px; 
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            max-height: 500px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-size: 12px;
+        }
+        button { 
+            padding: 10px 20px; 
+            margin: 5px; 
+            cursor: pointer;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 3px;
+        }
+        button:hover { background: #0056b3; }
+        .success { background: #28a745; }
+        .danger { background: #dc3545; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Attendance API Debugger</h1>
+    
+    <div>
+        <button onclick="testMarking('Present')" class="success">✅ Test Present</button>
+        <button onclick="testMarking('Absent')" class="danger">❌ Test Absent</button>
+        <button onclick="testMarking('Late')">⏰ Test Late</button>
+        <button onclick="clearLog()">🗑️ Clear Log</button>
+    </div>
+    
+    <h3>Debug Output:</h3>
+    <div id="output">Ready for testing...</div>
+
+    <script>
+        function log(msg, type = 'normal') {
+            const output = document.getElementById('output');
+            const time = new Date().toLocaleTimeString();
+            const prefix = type === 'error' ? '❌ ERROR' : type === 'success' ? '✅ SUCCESS' : 'ℹ️ INFO';
+            output.textContent += `[${time}] ${prefix}: ${msg}\n`;
+            output.scrollTop = output.scrollHeight;
+            console.log(msg);
+        }
+
+        function clearLog() {
+            document.getElementById('output').textContent = '';
+        }
+
+        function getToken() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                log('No token found! Please login first.', 'error');
+                return null;
+            }
+            log('Token found: ' + token.substring(0, 50) + '...');
+            return token;
+        }
+
+        function getUser() {
+            const userStr = localStorage.getItem('user');
+            if (!userStr) {
+                log('No user data found!', 'error');
+                return null;
+            }
+            return JSON.parse(userStr);
+        }
+
+        async function testMarking(status) {
+            clearLog();
+            log(`\n🚀 Testing Attendance Mark: ${status}\n`);
+            
+            const token = getToken();
+            if (!token) return;
+            
+            const user = getUser();
+            log(`User: ${user?.name || 'Unknown'} (${user?.role})`);
+            
+            const payload = { status };
+            log(`\n📤 Request Details:`);
+            log(`URL: /api/attendance`);
+            log(`Method: POST`);
+            log(`Body: ${JSON.stringify(payload, null, 2)}`);
+            log(`Headers: Authorization: Bearer [token], Content-Type: application/json`);
+            
+            try {
+                log(`\n⏳ Sending request...`);
+                
+                const response = await fetch('/api/attendance', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                log(`\n📥 Response Status: ${response.status} ${response.statusText}`);
+                
+                const responseText = await response.text();
+                log(`\nRaw Response:\n${responseText}`);
+                
+                if (responseText) {
+                    try {
+                        const data = JSON.parse(responseText);
+                        log(`\n✅ Parsed JSON:\n${JSON.stringify(data, null, 2)}`);
+                        
+                        if (response.ok) {
+                            log('\n✅ SUCCESS! Attendance marked.', 'success');
+                        } else {
+                            log(`\n❌ Server Error: ${data.message}`, 'error');
+                        }
+                    } catch (parseErr) {
+                        log(`\n❌ JSON Parse Error: ${parseErr.message}`, 'error');
+                    }
+                }
+                
+            } catch (error) {
+                log(`\n❌ Network Error: ${error.message}`, 'error');
+                log(error.stack);
+            }
+        }
+        
+        // Auto-check auth on load
+        window.addEventListener('load', () => {
+            const user = getUser();
+            if (user) {
+                log(`✅ Already logged in as: ${user.name} (${user.role})`);
+            } else {
+                log(`⚠️ Not logged in. Please login first!`, 'error');
+            }
+        });
+    </script>
+</body>
+</html>

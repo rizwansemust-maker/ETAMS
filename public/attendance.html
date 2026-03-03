@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETAMS - Attendance Records</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Attendance Records</h1>
+        <p>Welcome, <span id="user-name"></span></p>
+        <button id="logout-btn">Logout</button>
+    </header>
+
+    <main>
+        <section class="attendance-overview">
+            <h2>Daily Attendance</h2>
+            <table id="attendance-table">
+                <thead>
+                    <tr>
+                        <th>Employee ID</th>
+                        <th>Name</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Attendance rows will be dynamically loaded here -->
+                </tbody>
+            </table>
+            <button id="export-btn">Export Report</button>
+        </section>
+    </main>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETAMS - Login</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="login-container">
+        <h2>🔐 ETAMS Login</h2>
+        
+        <div class="error-message" id="error-message" style="color: red; margin-bottom: 10px;"></div>
+        
+        <form id="login-form">
+            <input type="email" id="login-email" placeholder="Email" value="mohsinndhb@gmail.com" required>
+            <input type="password" id="login-password" placeholder="Password" value="rcbrand7654" required>
+            
+            <select id="login-role" required style="width: 100%; padding: 10px; margin-bottom: 10px;">
+                <option value="">Select Role</option>
+                <option value="Admin">Admin</option>
+                <option value="Manager">Manager</option>
+                <option value="Employee" selected>Employee</option>
+            </select>
+            
+            <button type="submit" id="login-btn">Login</button>
+        </form>
+        
+        <p>Don't have an account? <a href="register.html">Register here</a></p>
+        
+        
+    </div>
+
+    <script>
+        function quickLogin(email, password, role) {
+            document.getElementById('login-email').value = email;
+            document.getElementById('login-password').value = password;
+            document.getElementById('login-role').value = role;
+            document.getElementById('login-form').dispatchEvent(new Event('submit'));
+        }
+
+        document.getElementById('login-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const role = document.getElementById('login-role').value;
+            const errorMsg = document.getElementById('error-message');
+            const loginBtn = document.getElementById('login-btn');
+            
+            if (!role) {
+                errorMsg.textContent = 'Please select a role';
+                return;
+            }
+            
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'Logging in...';
+            
+            try {
+                console.log('Sending login request...', { email, password, role });
+                
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password, role })
+                });
+                
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                
+                let data;
+                const responseText = await response.text();
+                console.log('Raw response:', responseText);
+                
+                try {
+                    data = JSON.parse(responseText);
+                } catch (parseError) {
+                    console.error('JSON Parse Error:', parseError);
+                    errorMsg.textContent = 'Server returned invalid response. Check console.';
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = 'Login';
+                    return;
+                }
+                
+                if (!response.ok) {
+                    // Server se error message dikhao
+                    errorMsg.textContent = data.message || 'Login failed';
+                    console.error('Server error:', data);
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = 'Login';
+                    return;
+                }
+                
+                // Success
+                console.log('Login success:', data);
+                
+                if (!data.token || !data.user) {
+                    console.error('Invalid response structure:', data);
+                    errorMsg.textContent = 'Invalid server response';
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = 'Login';
+                    return;
+                }
+                
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                
+                // Redirect based on role
+                const userRole = data.user.role.toLowerCase();
+                if (userRole === 'admin') window.location.href = 'admin-dashboard.html';
+                else if (userRole === 'manager') window.location.href = 'manager-dashboard.html';
+                else window.location.href = 'employee-dashboard.html';
+                
+            } catch (error) {
+                console.error('Catch block error:', error.message, error);
+                errorMsg.textContent = 'Error: ' + error.message;
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'Login';
+            }
+        });
+    </script>
+</body>
+</html>

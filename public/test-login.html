@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Test</title>
+    <style>
+        body { font-family: Arial; margin: 20px; }
+        #output { 
+            background: #f0f0f0; 
+            padding: 10px; 
+            margin: 10px 0; 
+            border: 1px solid #ccc;
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        button { padding: 10px 20px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Login API Test</h1>
+    <button onclick="testLogin()">Test Login (Admin)</button>
+    <button onclick="clearOutput()">Clear Output</button>
+    
+    <h3>Response:</h3>
+    <div id="output">Testing will appear here...</div>
+
+    <script>
+        function log(msg) {
+            const output = document.getElementById('output');
+            output.textContent += msg + '\n';
+            console.log(msg);
+        }
+
+        function clearOutput() {
+            document.getElementById('output').textContent = '';
+        }
+
+        async function testLogin() {
+            clearOutput();
+            log('🚀 Starting login test...\n');
+            
+            const payload = {
+                email: 'admin@etams.com',
+                password: 'admin123',
+                role: 'Admin'
+            };
+            
+            log('📤 Sending request:');
+            log(JSON.stringify(payload, null, 2));
+            log('\nWaiting for response...\n');
+            
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                log('Status: ' + response.status);
+                log('Status Text: ' + response.statusText);
+                
+                const responseText = await response.text();
+                log('\n📥 Raw Response Text:\n' + responseText);
+                
+                log('\n');
+                const data = JSON.parse(responseText);
+                log('📊 Parsed JSON:\n' + JSON.stringify(data, null, 2));
+                
+                if (data && data.user) {
+                    log('\n✅ User object found!');
+                    log(JSON.stringify(data.user, null, 2));
+                } else if (data && data.token) {
+                    log('\n⚠️ Token found but no user object!');
+                } else {
+                    log('\n❌ Unexpected response structure');
+                }
+                
+            } catch (error) {
+                log('\n❌ Error: ' + error.message);
+                log(error.stack);
+            }
+        }
+    </script>
+</body>
+</html>

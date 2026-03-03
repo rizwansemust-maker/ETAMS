@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETAMS - Manager Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Manager Dashboard</h1>
+        <p>Welcome, <span id="user-name"></span></p>
+        <button id="logout-btn">Logout</button>
+    </header>
+
+    <main>
+        <section class="overview">
+            <h2>Team Overview</h2>
+            <div class="cards">
+                <div class="card">
+                    <h3>Total Team Members</h3>
+                    <p id="total-employees">--</p>
+                </div>
+                <div class="card">
+                    <h3>Total Tasks Assigned</h3>
+                    <p id="total-tasks">--</p>
+                </div>
+                <div class="card">
+                    <h3>Attendance Summary</h3>
+                    <p id="attendance-summary">--</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="tasks">
+            <h2>Assigned Tasks</h2>
+            <ul id="task-list"></ul>
+        </section>
+
+        <section class="create-task">
+            <h2>Create New Task</h2>
+            <form id="task-form">
+                <input type="text" id="task-title" placeholder="Task Title" required>
+                <textarea id="task-desc" placeholder="Task Description"></textarea>
+                <input type="text" id="task-employee" placeholder="Assign to Employee ID" required>
+                <input type="date" id="task-due" required>
+                <button type="submit">Create Task</button>
+            </form>
+        </section>
+    </main>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

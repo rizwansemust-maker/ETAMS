@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETAMS - Register</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="register-container">
+        <h2>Register</h2>
+        <form id="register-form">
+            <input type="text" id="register-name" placeholder="Full Name" required>
+            <input type="email" id="register-email" placeholder="Email" required>
+            <input type="password" id="register-password" placeholder="Password" required>
+            
+            <select id="register-role" required>
+                <option value="">Select Role</option>
+                <option value="Admin">Admin</option>
+                <option value="Manager">Manager</option>
+                <option value="Employee">Employee</option>
+            </select>
+            
+            <input type="text" id="register-department" placeholder="Department (Optional)">
+            
+            <button type="submit">Register</button>
+        </form>
+        <p>Already have an account? <a href="login.html">Login here</a></p>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

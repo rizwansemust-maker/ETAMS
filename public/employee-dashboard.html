@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETAMS - Employee Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Employee Dashboard</h1>
+        <p>Welcome, <span id="user-name"></span></p>
+        <button id="logout-btn">Logout</button>
+    </header>
+
+    <main>
+        <section class="attendance">
+            <h2>Mark Attendance</h2>
+            <button onclick="markAttendance('Present')">Check In</button>
+            <button onclick="markAttendance('Absent')">Mark Absent</button>
+            <button onclick="markAttendance('Late')">Mark Late</button>
+        </section>
+
+        <section class="tasks">
+            <h2>My Tasks</h2>
+            <ul id="task-list"></ul>
+        </section>
+    </main>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

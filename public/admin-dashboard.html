@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETAMS - Admin Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Admin Dashboard</h1>
+        <p>Welcome, <span id="user-name"></span></p>
+        <button id="logout-btn">Logout</button>
+    </header>
+
+    <main>
+        <!-- Overview Cards -->
+        <section class="overview">
+            <h2>Overview</h2>
+            <div class="cards">
+                <div class="card">
+                    <h3>Total Employees</h3>
+                    <p id="total-employees">--</p>
+                </div>
+                <div class="card">
+                    <h3>Total Tasks</h3>
+                    <p id="total-tasks">--</p>
+                </div>
+                <div class="card">
+                    <h3>Attendance Summary</h3>
+                    <p id="attendance-summary">--</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Create Task Section -->
+        <section class="create-task">
+            <h2>Create New Task</h2>
+            <form id="task-form">
+                <input type="text" id="task-title" placeholder="Task Title" required>
+                <textarea id="task-desc" placeholder="Task Description"></textarea>
+                
+                <!-- Employee Dropdown -->
+                <select id="task-employee" required>
+                    <option value="">Select Employee</option>
+                    <!-- Options will be loaded via JS -->
+                </select>
+                
+                <input type="date" id="task-due" required>
+                <button type="submit">Create Task</button>
+            </form>
+        </section>
+
+        <!-- Task List Table -->
+        <section class="tasks">
+            <h2>All Tasks</h2>
+            <table id="task-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Assigned To</th>
+                        <th>Due Date</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="task-list">
+                    <!-- Tasks will be dynamically loaded here -->
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
